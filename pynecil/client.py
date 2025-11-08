@@ -19,6 +19,7 @@ from bleak_retry_connector import BleakClientWithServiceCache, establish_connect
 from . import const
 from .exceptions import CommunicationError
 from .types import (
+    AccelerometerValues,
     AnimationSpeed,
     AutostartMode,
     BatteryType,
@@ -26,6 +27,7 @@ from .types import (
     CharBulk,
     CharLive,
     CharSetting,
+    CharGameJam,
     DeviceInfoResponse,
     LanguageCode,
     LiveDataResponse,
@@ -33,6 +35,7 @@ from .types import (
     LogoDuration,
     OperatingMode,
     PowerSource,
+    PinecilMenus,
     ScreenOrientationMode,
     ScrollSpeed,
     SettingsDataResponse,
@@ -407,6 +410,13 @@ def decode_int(value: bytearray) -> int:
     """
     return int.from_bytes(value, byteorder="little", signed=False)
 
+
+def decode_accel(value: bytearray) -> AccelerometerValues:
+    x, y, z = (
+        int.from_bytes(i, byteorder="little", signed=True)
+        for i in [value[0:4], value[4:8], value[8:12]]
+    )
+    return AccelerometerValues(x, y, z)
 
 def decode_str(value: bytearray) -> str:
     """Decode byte-encoded string to a UTF-8 string.
@@ -894,4 +904,21 @@ CHAR_MAP: dict[Characteristic, tuple] = {
         bool,
         int,
     ),
+    CharGameJam.MENU: (
+        const.CHAR_UUID_GAMEJAM_MENU_SELECT,
+        lambda x: PinecilMenus(decode_int(x)),
+        lambda x: x.value if isinstance(x, PinecilMenus) else int(x),
+        lambda x: x if x in PinecilMenus._value2member_map_ else PinecilMenus.HomeScreen.value,
+    ),
+    CharGameJam.ACCEL: (
+        const.CHAR_UUID_GAMEJAM_GET_ACCELS,
+        decode_accel,
+    ),
 }
+
+"""
+UUID
+Decode
+Convert
+Validate
+"""
