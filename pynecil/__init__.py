@@ -4,10 +4,12 @@ __version__ = "4.2.1"
 from .client import Pynecil, discover
 from .exceptions import CommunicationError, UpdateException
 from .types import (
+    AccelerometerValues,
     AnimationSpeed,
     AutostartMode,
     BatteryType,
     CharBulk,
+    CharGameJam,
     CharLive,
     CharSetting,
     DeviceInfoResponse,
@@ -16,6 +18,7 @@ from .types import (
     LockingMode,
     LogoDuration,
     OperatingMode,
+    PinecilMenus,
     PowerSource,
     ScreenOrientationMode,
     ScrollSpeed,
@@ -27,10 +30,12 @@ from .types import (
 from .update import IronOSUpdate, LatestRelease
 
 __all__ = [
+    "AccelerometerValues",
     "AnimationSpeed",
     "AutostartMode",
     "BatteryType",
     "CharBulk",
+    "CharGameJam",
     "CharLive",
     "CharSetting",
     "CommunicationError",
@@ -43,6 +48,7 @@ __all__ = [
     "LockingMode",
     "LogoDuration",
     "OperatingMode",
+    "PinecilMenus",
     "PowerSource",
     "Pynecil",
     "ScreenOrientationMode",
