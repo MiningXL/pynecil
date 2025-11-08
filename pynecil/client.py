@@ -9,6 +9,8 @@ import struct
 from math import floor
 from typing import TYPE_CHECKING, Any, cast
 
+from uuid import UUID
+
 from bleak import BleakClient, BleakScanner
 from bleak.backends.device import BLEDevice
 from bleak.exc import BleakError
@@ -323,6 +325,20 @@ class Pynecil:
             raise CommunicationError from e
         return decode(result)
 
+    async def read_uuid(self, uuid: UUID) -> Any:
+        try:
+            await self.connect()
+            if TYPE_CHECKING:
+                assert self._client
+            result = await self._client.read_gatt_char(uuid)
+            _LOGGER.debug(
+                "Read UUID %s, result: %s", str(uuid), result
+            )
+        except (BleakError, TimeoutError) as e:
+            _LOGGER.debug("Failed to read UUID %s: %s", str(uuid), e)
+            raise CommunicationError from e
+        return result
+
     async def write(self, setting: CharSetting, value: Any) -> None:
         """Write to the specified characteristic.
 
@@ -357,6 +373,17 @@ class Pynecil:
             _LOGGER.debug("Wrote characteristic %s with value: %s", str(uuid), value)
         except (BleakError, TimeoutError) as e:
             _LOGGER.debug("Failed to write characteristic %s: %s", str(uuid), e)
+            raise CommunicationError from e
+    
+    async def write_to_uuid(self, uuid: UUID, value: Any) -> None:
+        try:
+            await self.connect()
+            if TYPE_CHECKING:
+                assert self._client
+            await self._client.write_gatt_char(uuid, encode_int(value)) 
+            _LOGGER.debug("Wrote UUID %s with value: %s", str(uuid), value)
+        except (BleakError, TimeoutError) as e:
+            _LOGGER.debug("Failed to write UUID %s: %s", str(uuid), e)
             raise CommunicationError from e
 
 
