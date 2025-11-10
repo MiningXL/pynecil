@@ -267,6 +267,7 @@ class PinecilMenus(Enum):
 
     GameJamHome = 16                # GameJam Mode
     GameJamTemperatureAdjist = 17   # GameJam Temperature Adjust
+    GameJamShake = 18               # GameJam Shake Microgame
 
 
 @dataclass
