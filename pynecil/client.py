@@ -915,10 +915,3 @@ CHAR_MAP: dict[Characteristic, tuple] = {
         decode_accel,
     ),
 }
-
-"""
-UUID
-Decode
-Convert
-Validate
-"""
